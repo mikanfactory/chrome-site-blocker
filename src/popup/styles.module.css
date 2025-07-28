@@ -135,7 +135,8 @@
 .timeUnit {
   display: flex;
   align-items: center;
-  gap: 1px;
+  margin-right: auto;
+  margin-left: 8px;
 }
 
 /* ドメインアイコン */

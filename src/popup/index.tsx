@@ -152,7 +152,6 @@ function App() {
 						disabled={!extensionEnabled}
 					/>
 					<div className={styles.timeUnit}>
-						<span className={styles.timeIcon}></span>
 						<span className={styles.label}>Min</span>
 					</div>
 					<Toggle
