@@ -10,7 +10,7 @@ function updateUI(isBlocked) {
 function updateTimeLimitUI(isActive, endTime) {
     const timeStatus = document.getElementById('timeStatus');
     const timeLimitToggle = document.getElementById('timeLimit');
-    
+
     if (isActive && endTime) {
         const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
         const minutes = Math.floor(remaining / 60);
@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const isBlocked = list.includes(domain);
             const timeLimitEndTime = res[TIME_LIMIT_KEY];
             const isTimeLimitActive = timeLimitEndTime && Date.now() < timeLimitEndTime;
-            
+
             toggle.checked = isBlocked;
             updateUI(isBlocked);
             updateTimeLimitUI(isTimeLimitActive, timeLimitEndTime);
-            
+
             // 時間制限が有効な場合、定期的にUI更新
             if (isTimeLimitActive) {
                 const interval = setInterval(() => {
@@ -75,9 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ブロックトグル操作でリスト更新 → タブ再読み込み
         toggle.addEventListener('change', () => {
-            console.log('Toggle changed:', toggle.checked);
             chrome.storage.local.get({ [STORAGE_KEY]: [] }, res => {
-                console.log('Current storage:', res);
                 let list = res[STORAGE_KEY];
                 if (toggle.checked) {
                     // ON → リストに追加
@@ -87,13 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     list = list.filter(d => d !== domain);
                 }
                 chrome.storage.local.set({ [STORAGE_KEY]: list }, () => {
-                    console.log('Updated storage:', list);
                     updateUI(toggle.checked);
                     chrome.tabs.reload(tab.id);
                 });
             });
         });
-        
+
         // 時間制限トグル操作
         timeLimitToggle.addEventListener('change', () => {
             if (timeLimitToggle.checked) {
@@ -102,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 chrome.storage.local.set({ [TIME_LIMIT_KEY]: endTime }, () => {
                     updateTimeLimitUI(true, endTime);
                     chrome.tabs.reload(tab.id);
-                    
+
                     // 定期的にUI更新
                     const interval = setInterval(() => {
                         const remaining = endTime - Date.now();

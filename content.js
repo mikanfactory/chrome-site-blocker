@@ -11,12 +11,6 @@ chrome.storage.local.get({ blockedHosts: [], timeLimitEndTime: null }, res => {
     // 時間制限チェック
     const isTimeLimitActive = timeLimitEndTime && Date.now() < timeLimitEndTime;
 
-    console.log('Blocked hosts:', list);
-    console.log('Current host:', host);
-    console.log('Is blocked:', blocked);
-    console.log('Time limit active:', isTimeLimitActive);
-    console.log('Time limit end:', timeLimitEndTime ? new Date(timeLimitEndTime) : null);
-
     // ブロック対象かつ時間制限が有効でない場合のみブロック
     if (blocked && !isTimeLimitActive) {
         document.documentElement.innerHTML = `
