@@ -95,6 +95,9 @@
 	cursor: pointer;
 	transition: all 0.3s ease;
 	background: var(--toggle-bg, #e5e5ea);
+	border: none;
+	padding: 0;
+	outline: none;
 }
 
 .toggle[data-checked="true"] {
