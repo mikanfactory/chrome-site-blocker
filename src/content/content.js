@@ -1,7 +1,17 @@
-chrome.storage.local.get({ blockedHosts: [], timeLimitEndTime: null }, res => {
+chrome.storage.local.get({ 
+    blockedHosts: [], 
+    timeLimitEndTime: null, 
+    extensionEnabled: true 
+}, res => {
     const list = res.blockedHosts;
     const timeLimitEndTime = res.timeLimitEndTime;
+    const extensionEnabled = res.extensionEnabled;
     const host = location.hostname;
+
+    // 拡張機能が無効な場合は何もしない
+    if (!extensionEnabled) {
+        return;
+    }
 
     // ドメイン一致判定（サブドメインも含める）
     const blocked = list.some(domain =>
@@ -10,6 +20,11 @@ chrome.storage.local.get({ blockedHosts: [], timeLimitEndTime: null }, res => {
 
     // 時間制限チェック
     const isTimeLimitActive = timeLimitEndTime && Date.now() < timeLimitEndTime;
+
+    // 時間制限が終了している場合、ストレージから削除
+    if (timeLimitEndTime && Date.now() >= timeLimitEndTime) {
+        chrome.storage.local.remove('timeLimitEndTime');
+    }
 
     // ブロック対象かつ時間制限が有効でない場合のみブロック
     if (blocked && !isTimeLimitActive) {
