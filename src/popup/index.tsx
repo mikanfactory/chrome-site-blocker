@@ -79,6 +79,8 @@ function App() {
 			if (Date.now() >= timeLimitEndTime) {
 				chrome.storage.local.remove(TIME_LIMIT_KEY);
 				setTimeLimitEndTime(null);
+				// 時間制限終了時にタブをリロード
+				chrome.tabs.reload();
 				clearInterval(interval);
 			}
 		}, 1000);

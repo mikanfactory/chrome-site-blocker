@@ -28,7 +28,7 @@ chrome.storage.local.get(
 			chrome.storage.local.remove("timeLimitEndTime");
 		}
 
-		// ブロック対象かつ時間制限が有効でない場合のみブロック
+		// ブロック対象で時間制限が有効でない場合のみブロック
 		if (blocked && !isTimeLimitActive) {
 			document.documentElement.innerHTML = `
       <div style="
