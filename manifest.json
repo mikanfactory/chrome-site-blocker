@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Block X & YouTube",
+  "description": "トグルで X と YouTube の閲覧をブロック／解除します",
+  "version": "1.0",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.x.com/*",
+    "*://*.twitter.com/*",
+    "*://*.youtube.com/*",
+    "*://youtu.be/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Blocker"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.x.com/*",
+        "*://*.twitter.com/*",
+        "*://*.youtube.com/*",
+        "*://youtu.be/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
