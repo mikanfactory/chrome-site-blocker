@@ -18,14 +18,17 @@ const Toggle = ({
 	onChange: () => void;
 	disabled?: boolean;
 }) => (
-	<div
+	<button
+		type="button"
 		className={styles.toggle}
 		data-checked={checked}
 		data-disabled={disabled}
 		onClick={disabled ? undefined : onChange}
+		disabled={disabled}
+		aria-label={checked ? "オン" : "オフ"}
 	>
 		<div className={styles.toggleKnob} />
-	</div>
+	</button>
 );
 
 function App() {
@@ -41,7 +44,8 @@ function App() {
 	useEffect(() => {
 		// アクティブタブのドメイン取得
 		chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-			const host = new URL(tab.url!).hostname;
+			if (!tab.url) return;
+			const host = new URL(tab.url).hostname;
 			setDomain(host);
 		});
 
@@ -188,5 +192,6 @@ function App() {
 	);
 }
 
-const container = document.getElementById("root")!;
+const container = document.getElementById("root");
+if (!container) throw new Error("Root element not found");
 createRoot(container).render(<App />);

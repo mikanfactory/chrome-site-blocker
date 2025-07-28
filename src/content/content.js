@@ -17,7 +17,7 @@ chrome.storage.local.get(
 
 		// ドメイン一致判定（サブドメインも含める）
 		const blocked = list.some(
-			(domain) => host === domain || host.endsWith("." + domain),
+			(domain) => host === domain || host.endsWith(`.${domain}`),
 		);
 
 		// 時間制限チェック
