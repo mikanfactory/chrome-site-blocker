@@ -1,37 +1,60 @@
-const BLOCKED_KEY = 'blocked';
-// ブロック対象の URL パターン
-const URL_PATTERNS = [
-    '*://*.x.com/*',
-    '*://*.twitter.com/*',
-    '*://*.youtube.com/*',
-    '*://youtu.be/*'
-];
+const STORAGE_KEY = 'blockedHosts';
 
-function updateStatusText(checked) {
-    document.getElementById('status').textContent = checked ? '🔒 ブロック中' : '✅ 開放中';
+function updateUI(isBlocked) {
+    document.getElementById('status').textContent = isBlocked
+        ? '🔒 ブロック中'
+        : '✅ ブロック解除中';
+}
+
+// URL からホストネームを取り出す
+function getDomain(url) {
+    try {
+        return new URL(url).hostname;
+    } catch {
+        return null;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.getElementById('toggle');
+    const status = document.getElementById('status');
 
-    // 現在の状態を取得してトグルに反映
-    chrome.storage.local.get(BLOCKED_KEY, res => {
-        const isBlocked = res[BLOCKED_KEY] || false;
-        toggle.checked = isBlocked;
-        updateStatusText(isBlocked);
-    });
+    // アクティブタブのドメインを取得
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        const tab = tabs[0];
+        const domain = getDomain(tab.url);
+        if (!domain) {
+            toggle.disabled = true;
+            status.textContent = '無効なURL';
+            return;
+        }
 
-    // トグル操作時
-    toggle.addEventListener('change', () => {
-        const isBlocked = toggle.checked;
-        chrome.storage.local.set({ [BLOCKED_KEY]: isBlocked }, () => {
-            updateStatusText(isBlocked);
+        // ストレージからリストを取得してトグルに反映
+        chrome.storage.local.get({ [STORAGE_KEY]: [] }, res => {
+            const list = res[STORAGE_KEY];
+            const isBlocked = list.includes(domain);
+            toggle.checked = isBlocked;
+            updateUI(isBlocked);
+        });
 
-            // 対象サイトをリロードして即時反映
-            chrome.tabs.query({ url: URL_PATTERNS }, tabs => {
-                for (let tab of tabs) {
-                    chrome.tabs.reload(tab.id);
+        // トグル操作でリスト更新 → タブ再読み込み
+        toggle.addEventListener('change', () => {
+            console.log('Toggle changed:', toggle.checked);
+            chrome.storage.local.get({ [STORAGE_KEY]: [] }, res => {
+                console.log('Current storage:', res);
+                let list = res[STORAGE_KEY];
+                if (toggle.checked) {
+                    // ON → リストに追加
+                    if (!list.includes(domain)) list.push(domain);
+                } else {
+                    // OFF → リストから削除
+                    list = list.filter(d => d !== domain);
                 }
+                chrome.storage.local.set({ [STORAGE_KEY]: list }, () => {
+                    console.log('Updated storage:', list);
+                    updateUI(toggle.checked);
+                    chrome.tabs.reload(tab.id);
+                });
             });
         });
     });
