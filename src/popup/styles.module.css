@@ -1,0 +1,150 @@
+/* メインコンテナ */
+.container {
+  width: 400px;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: white;
+  color: #333;
+  font-size: 14px;
+}
+
+/* ヘッダー */
+.header {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #1d1d1f;
+}
+
+/* セクション */
+.section {
+  margin-bottom: 16px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* テキスト */
+.label {
+  font-size: 16px;
+  color: #1d1d1f;
+  font-weight: 400;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  color: #8e8e93;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.domain {
+  font-size: 16px;
+  color: #1d1d1f;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* 入力フィールド */
+.input {
+  width: 60px;
+  height: 32px;
+  border: 1px solid #d1d1d6;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 区切り線 */
+.divider {
+  height: 1px;
+  background: #e5e5ea;
+  margin: 20px 0;
+}
+
+/* エラー表示 */
+.error {
+  color: #666;
+  text-align: center;
+}
+
+/* Toggle コンポーネント */
+.toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--toggle-bg, #e5e5ea);
+}
+
+.toggle[data-checked="true"] {
+  --toggle-bg: #007aff;
+}
+
+.toggle[data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.toggleKnob {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: white;
+  position: absolute;
+  top: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  left: var(--knob-position, 2px);
+}
+
+.toggle[data-checked="true"] .toggleKnob {
+  --knob-position: 22px;
+}
+
+/* 時間設定セクション */
+.timeSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeIcon {
+  font-size: 18px;
+}
+
+.timeUnit {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+/* ドメインアイコン */
+.domainIcon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+/* ドメイン情報セクション */
+.domainInfo {
+  margin-bottom: 12px;
+}

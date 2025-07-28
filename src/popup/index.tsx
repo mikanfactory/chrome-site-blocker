@@ -1,6 +1,7 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import styles from "./styles.module.css";
 
 const STORAGE_KEY = "blockedHosts";
 const TIME_LIMIT_KEY = "timeLimitEndTime";
@@ -18,31 +19,12 @@ const Toggle = ({
 	disabled?: boolean;
 }) => (
 	<div
+		className={styles.toggle}
+		data-checked={checked}
+		data-disabled={disabled}
 		onClick={disabled ? undefined : onChange}
-		style={{
-			width: 44,
-			height: 24,
-			borderRadius: 12,
-			background: checked ? "#007AFF" : "#E5E5EA",
-			position: "relative",
-			cursor: disabled ? "not-allowed" : "pointer",
-			transition: "all 0.3s ease",
-			opacity: disabled ? 0.5 : 1,
-		}}
 	>
-		<div
-			style={{
-				width: 20,
-				height: 20,
-				borderRadius: 10,
-				background: "white",
-				position: "absolute",
-				top: 2,
-				left: checked ? 22 : 2,
-				transition: "all 0.3s ease",
-				boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-			}}
-		/>
+		<div className={styles.toggleKnob} />
 	</div>
 );
 
@@ -141,37 +123,37 @@ function App() {
 
 	if (!domain)
 		return (
-			<div style={containerStyle}>
-				<div style={{ color: "#666", textAlign: "center" }}>無効なURLです</div>
+			<div className={styles.container}>
+				<div className={styles.error}>無効なURLです</div>
 			</div>
 		);
 
 	return (
-		<div style={containerStyle}>
+		<div className={styles.container}>
 			{/* ヘッダー */}
-			<div style={headerStyle}>
-				<h1 style={titleStyle}>Simple Site Blocker</h1>
-				<div style={rowStyle}>
-					<span style={labelStyle}>Enabled</span>
+			<div className={styles.header}>
+				<h1 className={styles.title}>Simple Site Blocker</h1>
+				<div className={styles.row}>
+					<span className={styles.label}>Enabled</span>
 					<Toggle checked={extensionEnabled} onChange={toggleExtension} />
 				</div>
 			</div>
 
 			{/* 時間設定セクション */}
-			<div style={sectionStyle}>
-				<div style={rowStyle}>
+			<div className={styles.section}>
+				<div className={styles.row}>
 					<input
 						type="number"
 						min="1"
 						max="1440"
 						value={timeMinutes}
 						onChange={handleTimeMinutesChange}
-						style={inputStyle}
+						className={styles.input}
 						disabled={!extensionEnabled}
 					/>
-					<div style={{ display: "flex", alignItems: "center", gap: 1 }}>
-						<span style={{ fontSize: 18 }}></span>
-						<span style={labelStyle}>Min</span>
+					<div className={styles.timeUnit}>
+						<span className={styles.timeIcon}></span>
+						<span className={styles.label}>Min</span>
 					</div>
 					<Toggle
 						checked={isTimeLimitActive}
@@ -182,19 +164,19 @@ function App() {
 			</div>
 
 			{/* 区切り線 */}
-			<div style={dividerStyle} />
+			<div className={styles.divider} />
 
 			{/* 現在のサイト情報 */}
-			<div style={sectionStyle}>
-				<div style={{ marginBottom: 12 }}>
-					<div style={sectionTitleStyle}>Current Site</div>
-					<div style={domainStyle}>
-						<span style={{ fontSize: 16, marginRight: 8 }}>🌐</span>
+			<div className={styles.section}>
+				<div className={styles.domainInfo}>
+					<div className={styles.sectionTitle}>Current Site</div>
+					<div className={styles.domain}>
+						<span className={styles.domainIcon}>🌐</span>
 						{domain}
 					</div>
 				</div>
-				<div style={rowStyle}>
-					<span style={labelStyle}>Blocked</span>
+				<div className={styles.row}>
+					<span className={styles.label}>Blocked</span>
 					<Toggle
 						checked={isBlocked}
 						onChange={toggleBlocked}
@@ -205,78 +187,6 @@ function App() {
 		</div>
 	);
 }
-
-// スタイル定義
-const containerStyle: React.CSSProperties = {
-	width: 400,
-	padding: 20,
-	fontFamily:
-		'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-	background: "white",
-	color: "#333",
-	fontSize: 14,
-};
-
-const headerStyle: React.CSSProperties = {
-	marginBottom: 20,
-};
-
-const titleStyle: React.CSSProperties = {
-	fontSize: 20,
-	fontWeight: 600,
-	margin: "0 0 16px 0",
-	color: "#1D1D1F",
-};
-
-const sectionStyle: React.CSSProperties = {
-	marginBottom: 16,
-};
-
-const rowStyle: React.CSSProperties = {
-	display: "flex",
-	justifyContent: "space-between",
-	alignItems: "center",
-	marginBottom: 8,
-};
-
-const labelStyle: React.CSSProperties = {
-	fontSize: 16,
-	color: "#1D1D1F",
-	fontWeight: 400,
-};
-
-const sectionTitleStyle: React.CSSProperties = {
-	fontSize: 14,
-	color: "#8E8E93",
-	marginBottom: 4,
-	fontWeight: 500,
-};
-
-const domainStyle: React.CSSProperties = {
-	fontSize: 16,
-	color: "#1D1D1F",
-	fontWeight: 500,
-	display: "flex",
-	alignItems: "center",
-	marginBottom: 12,
-};
-
-const inputStyle: React.CSSProperties = {
-	width: 60,
-	height: 32,
-	border: "1px solid #D1D1D6",
-	borderRadius: 6,
-	textAlign: "center",
-	fontSize: 16,
-	fontWeight: 500,
-	outline: "none",
-};
-
-const dividerStyle: React.CSSProperties = {
-	height: 1,
-	background: "#E5E5EA",
-	margin: "20px 0",
-};
 
 const container = document.getElementById("root")!;
 createRoot(container).render(<App />);

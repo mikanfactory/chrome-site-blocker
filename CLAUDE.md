@@ -34,6 +34,10 @@ Content script checks `timeLimitEndTime` and bypasses blocking if current time i
 - `npm run build:content`: Copy content scripts to dist
 - `npm run build:manifest`: Copy manifest to dist
 
+### Code Quality
+- `npm run lint`: Lint all source files using Biome
+- `npm run format`: Format all source files using Biome
+
 ### Tech Stack  
 - React 19 + TypeScript for popup UI
 - Vite for popup build process
