@@ -8,9 +8,10 @@ Chrome Extension v3 サイトブロッカー - トグルでサイトをブロッ
 
 ## Architecture
 
+- **src/popup/index.tsx**: React-based popup UI for toggling block status per domain
+- **src/content/content.js**: Content script that blocks sites by replacing page content
 - **manifest.json**: Extension configuration with permissions for storage, tabs, and all URLs
-- **popup.html/popup.js**: Extension popup UI for toggling block status per domain
-- **content.js**: Content script that blocks sites by replacing page content
+- **vite.config.ts**: Build configuration for popup using Vite + React
 
 ### Data Flow
 1. Popup retrieves current domain and blocked status from chrome.storage.local
@@ -19,17 +20,31 @@ Chrome Extension v3 サイトブロッカー - トグルでサイトをブロッ
 
 ### Storage Structure
 - Key: `blockedHosts` (array of blocked domain strings)
+- Key: `timeLimitEndTime` (timestamp for time limit feature)
 - Domain matching includes subdomains (e.g., `example.com` blocks `www.example.com`)
+
+### Time Limit Feature
+Content script checks `timeLimitEndTime` and bypasses blocking if current time is before the limit.
 
 ## Development
 
-This is a Manifest V3 Chrome extension with no build process required.
+### Build Commands
+- `npm run build`: Full build (popup + content + manifest)
+- `npm run build:popup`: Build React popup using Vite
+- `npm run build:content`: Copy content scripts to dist
+- `npm run build:manifest`: Copy manifest to dist
+
+### Tech Stack  
+- React 19 + TypeScript for popup UI
+- Vite for popup build process
+- Plain JavaScript for content scripts
 
 ### Testing
 Load as unpacked extension in Chrome:
-1. Open `chrome://extensions/`
-2. Enable Developer mode
-3. Click "Load unpacked" and select this directory
+1. Run `npm run build` to create dist directory
+2. Open `chrome://extensions/`
+3. Enable Developer mode
+4. Click "Load unpacked" and select the `dist` directory
 
 ### Debugging
 - Popup: Right-click extension icon → Inspect popup
