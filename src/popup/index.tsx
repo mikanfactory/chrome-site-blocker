@@ -95,6 +95,7 @@ function App() {
 		const newEnabled = !extensionEnabled;
 		chrome.storage.local.set({ [ENABLED_KEY]: newEnabled }, () => {
 			setExtensionEnabled(newEnabled);
+			chrome.tabs.reload();
 		});
 	};
 
