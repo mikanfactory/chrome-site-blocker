@@ -6,7 +6,7 @@ import styles from "./styles.module.css";
 const STORAGE_KEY = "blockedHosts";
 const TIME_LIMIT_KEY = "timeLimitEndTime";
 const ENABLED_KEY = "extensionEnabled";
-const TIME_MINUTES_KEY = "timeMinutes";
+const TIME_SECONDS_KEY = "timeSeconds";
 
 // スライダースイッチコンポーネント
 const Toggle = ({
@@ -36,7 +36,7 @@ function App() {
 	const [list, setList] = useState<string[]>([]);
 	const [timeLimitEndTime, setTimeLimitEndTime] = useState<number | null>(null);
 	const [extensionEnabled, setExtensionEnabled] = useState(true);
-	const [timeMinutes, setTimeMinutes] = useState(5);
+	const [timeSeconds, setTimeSeconds] = useState(30);
 
 	const isBlocked = domain ? list.includes(domain) : false;
 	const isTimeLimitActive = timeLimitEndTime && Date.now() < timeLimitEndTime;
@@ -55,12 +55,12 @@ function App() {
 				[STORAGE_KEY]: [],
 				[TIME_LIMIT_KEY]: null,
 				[ENABLED_KEY]: true,
-				[TIME_MINUTES_KEY]: 5,
+				[TIME_SECONDS_KEY]: 30,
 			},
 			(res) => {
 				setList(res[STORAGE_KEY]);
 				setExtensionEnabled(res[ENABLED_KEY]);
-				setTimeMinutes(res[TIME_MINUTES_KEY]);
+				setTimeSeconds(res[TIME_SECONDS_KEY]);
 
 				const endTime = res[TIME_LIMIT_KEY];
 
@@ -114,17 +114,17 @@ function App() {
 		if (!extensionEnabled) return;
 		const nextEndTime = isTimeLimitActive
 			? null
-			: Date.now() + timeMinutes * 60 * 1000;
+			: Date.now() + timeSeconds * 1000;
 		chrome.storage.local.set({ [TIME_LIMIT_KEY]: nextEndTime }, () => {
 			setTimeLimitEndTime(nextEndTime);
 			chrome.tabs.reload();
 		});
 	};
 
-	const handleTimeMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const minutes = Math.max(1, Math.min(1440, parseInt(e.target.value) || 1));
-		setTimeMinutes(minutes);
-		chrome.storage.local.set({ [TIME_MINUTES_KEY]: minutes });
+	const handleTimeSecondsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const seconds = Math.max(1, Math.min(86400, parseInt(e.target.value) || 1));
+		setTimeSeconds(seconds);
+		chrome.storage.local.set({ [TIME_SECONDS_KEY]: seconds });
 	};
 
 	if (!domain)
@@ -151,14 +151,14 @@ function App() {
 					<input
 						type="number"
 						min="1"
-						max="1440"
-						value={timeMinutes}
-						onChange={handleTimeMinutesChange}
+						max="86400"
+						value={timeSeconds}
+						onChange={handleTimeSecondsChange}
 						className={styles.input}
 						disabled={!extensionEnabled}
 					/>
 					<div className={styles.timeUnit}>
-						<span className={styles.label}>Min</span>
+						<span className={styles.label}>Sec</span>
 					</div>
 					<Toggle
 						checked={isTimeLimitActive}
