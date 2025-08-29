@@ -115,6 +115,13 @@ function App() {
 		const nextEndTime = isTimeLimitActive
 			? null
 			: Date.now() + timeSeconds * 1000;
+
+		console.log("[Site Blocker Debug] toggleTimeLimit called");
+		console.log("[Site Blocker Debug] isTimeLimitActive:", isTimeLimitActive);
+		console.log("[Site Blocker Debug] timeSeconds:", timeSeconds);
+		console.log("[Site Blocker Debug] Date.now():", Date.now());
+		console.log("[Site Blocker Debug] nextEndTime:", nextEndTime);
+
 		chrome.storage.local.set({ [TIME_LIMIT_KEY]: nextEndTime }, () => {
 			setTimeLimitEndTime(nextEndTime);
 			chrome.tabs.reload();

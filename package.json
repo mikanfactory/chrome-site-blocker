@@ -9,8 +9,9 @@
     "format": "npx @biomejs/biome format --write ./src",
     "build:popup": "vite build",
     "build:content": "cp -r src/content dist/content",
+    "build:background": "cp -r src/background dist/background",
     "build:manifest": "cp manifest.json dist/manifest.json",
-    "build": "npm run build:popup && npm run build:content && npm run build:manifest"
+    "build": "npm run build:popup && npm run build:content && npm run build:background && npm run build:manifest"
   },
   "keywords": [],
   "author": "",
